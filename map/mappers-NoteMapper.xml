@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spring.dao.NoteMapperDao">
+  <resultMap id="note" type="Note">
+    <result property="noteId" column="noteId"/>
+    <result property="content" column="content"/>
+    <result property="noteTypeId" column="noteTypeId"/>
+    <result property="createDate" column="createDate"/>
+    <result property="userId" column="userId"/>
+  </resultMap>
+  <select id="selectNote" resultType="java.util.Map" resultMap="note">select * from note where noteId = #{noteId}</select>
+  <select id="selectListNote" resultType="java.util.List" resultMap="note">select * from note where 1 = 1 
+    <if test="condition != null">and ${condition}</if>  
+    <if test="noteId != null">and noteId = #{noteId}</if>  
+    <if test="content != null">and content = '#{content}'</if>  
+    <if test="noteTypeId != null">and noteTypeId = #{noteTypeId}</if>  
+    <if test="createDate != null">and createDate = '#{createDate}'</if>  
+    <if test="userId != null">and userId = #{userId}</if> 
+    <if test="startPage != -1"> limit #{startPage},#{page}</if> 
+  </select>
+  <select id="selectCountNote" resultType="java.lang.Integer">select count(noteId) from note where 1 = 1 
+    <if test="condition != null">and ${condition}</if>  
+    <if test="noteId != null">and noteId = #{noteId}</if>  
+    <if test="content != null">and content = '#{content}'</if>  
+    <if test="noteTypeId != null">and noteTypeId = #{noteTypeId}</if>  
+    <if test="createDate != null">and createDate = '#{createDate}'</if>  
+    <if test="userId != null">and userId = #{userId}</if> 
+  </select>
+  <insert id="insertNote" parameterType="Note">insert into note (noteId,content,noteTypeId,createDate,userId) values (#{noteId},#{content},#{noteTypeId},#{createDate},#{userId})</insert>
+  <update id="updateNote" parameterType="Note">update note set 
+    <if test="noteId != null">noteId = #{noteId},</if>  
+    <if test="content != null">content = #{content},</if>  
+    <if test="noteTypeId != null">noteTypeId = #{noteTypeId},</if>  
+    <if test="createDate != null">createDate = #{createDate},</if>  
+    <if test="userId != null">userId = #{userId},</if>noteId = #{noteId} where noteId = #{noteId}
+  </update>
+  <delete id="deleteByIdsNote" parameterType="Note">delete from note where noteId in (#{ids})</delete>
+  <delete id="deleteNote" parameterType="Note">delete from note where noteId = #{ids}</delete>
+  <select id="maxIdNote" resultType="java.util.Map">select max(noteId) from note</select>
+  <select id="selectYear" resultType="java.util.HashMap" parameterType="Note">select date_format(createDate,'%Y') as yearDate,count(*) as count from note where userId = #{userId} group by yearDate desc</select>
+  <select id="selectMonth" resultType="java.util.HashMap" parameterType="Note">select date_format(createDate,'%m') as monthDate,count(*) as count from note where userId = #{userId} 
+    <if test="condition != null">and ${condition}</if> group by monthDate asc
+  </select>
+  <select id="selectDay" resultType="java.util.HashMap" parameterType="Note">select date_format(createDate,'%d') as dayDate,count(*) as count from note where userId = #{userId} 
+    <if test="condition != null">and ${condition}</if> group by dayDate asc
+  </select>
+</mapper>

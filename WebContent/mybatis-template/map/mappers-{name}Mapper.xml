@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.{TableName}MapperDao">
+
+	<resultMap id="{tableName}" type="{TableName}">
+		{for}
+		<result property="{columnName}" column="{columnName}" />
+		{endfor}
+	</resultMap>
+
+	<select id="select{TableName}" resultType="java.util.Map" resultMap="{tableName}">
+		select * from {tablename} where {tableName}Id = #{{tableName}Id}
+	</select>
+	
+	<select id="selectList{TableName}"  resultType="java.util.List" resultMap="{tableName}">
+		select * from {tablename} where 1 = 1 
+			<if test="condition != null"> and ${condition}</if> 
+	   {for}<if test="{columnname} != null"> and {columnname} = {#columnname} </if> {endfor}
+	        <if test="startPage != -1"> limit #{startPage},#{page}</if>
+	</select>
+	
+	<select id="selectCount{TableName}"  resultType="java.lang.Integer" >
+		select count({tableName}Id) from {tablename} where 1 = 1 
+		<if test="condition != null"> and ${condition}</if> 
+   {for}<if test="{columnname} != null"> and {columnname} = {#columnname}</if> {endfor} 
+	</select>
+	
+	<insert id="insert{TableName}" parameterType="{TableName}">
+		insert into {tablename} (
+		{for}{columnname},{endfor}
+		) values (
+		{for}#{{columnName}},{endfor}
+		)
+	</insert>
+	
+	<update id="update{TableName}" parameterType="{TableName}">
+		update {tablename} set 
+		{for}<if test="columnname != null">{columnname} = #{{columnName}},</if>{endfor}
+		{tableName}Id = #{{tableName}Id} where {tableName}Id = #{{tableName}Id}
+	</update>
+	
+	<delete id="deleteByIds{TableName}" parameterType="{TableName}">
+		delete from {tablename} where {tableName}Id in (#{ids})
+	</delete>
+
+	<select id="maxId{TableName}" resultType="java.lang.Integer">
+		select max({tableName}Id) from {tablename}
+	</select>
+	
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spring.dao.NoteTypeMapperDao">
+  <resultMap id="noteType" type="NoteType">
+    <result property="noteTypeId" column="noteTypeId"/>
+    <result property="noteTypeName" column="noteTypeName"/>
+  </resultMap>
+  <select id="selectNoteType" resultType="java.util.Map" resultMap="noteType">select * from note_type where noteTypeId = #{noteTypeId}</select>
+  <select id="selectListNoteType" resultType="java.util.List" resultMap="noteType">select * from note_type where 1 = 1 
+    <if test="noteTypeId != null">and noteTypeId = #{noteTypeId}</if>  
+    <if test="noteTypeName != null">and noteTypeName = '#{noteTypeName}'</if> 
+    <if test="startPage != -1"> limit #{startPage},#{page}</if> 
+  </select>
+  <select id="selectCountNoteType" resultType="java.lang.Integer">select count(noteTypeId) from note_type where 1 = 1 
+    <if test="noteTypeId != null">and noteTypeId = #{noteTypeId}</if>  
+    <if test="noteTypeName != null">and noteTypeName = '#{noteTypeName}'</if> 
+  </select>
+  <insert id="insertNoteType" parameterType="NoteType">insert into note_type (noteTypeId,noteTypeName) values (#{noteTypeId},#{noteTypeName})</insert>
+  <update id="updateNoteType" parameterType="NoteType">update note_type set 
+    <if test="noteTypeId != null">noteTypeId = #{noteTypeId},</if>  
+    <if test="noteTypeName != null">noteTypeName = #{noteTypeName},</if>noteTypeId = #{noteTypeId} where noteTypeId = #{noteTypeId}
+  </update>
+  <delete id="deleteByIdsNoteType" parameterType="NoteType">delete from note_type where noteTypeId in (#{ids})</delete>
+  <delete id="deleteNoteType" parameterType="NoteType">delete from note_type where noteTypeId = #{ids}</delete>
+  <select id="maxIdNoteType" resultType="java.util.Map" resultMap="noteType">select max(noteTypeId) from note_type</select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spring.dao.UserMapperDao">
+  <resultMap id="user" type="User">
+    <result property="userId" column="userId"/>
+    <result property="username" column="username"/>
+    <result property="password" column="password"/>
+  </resultMap>
+  <select id="selectUser" resultType="java.util.Map" resultMap="user">select * from user where userId = #{userId}</select>
+  <select id="selectListUser" resultType="java.util.List" resultMap="user">select * from user where 1 = 1 
+    <if test="userId != null">and userId = #{userId}</if>  
+    <if test="username != null">and username = #{username}</if>  
+    <if test="password != null">and password = #{password}</if> 
+    <if test="startPage != -1"> limit #{startPage},#{page}</if> 
+  </select>
+  <select id="selectCountUser" resultType="java.lang.Integer">select count(userId) from user where 1 = 1 
+    <if test="userId != null">and userId = #{userId}</if>  
+    <if test="username != null">and username = '#{username}'</if>  
+    <if test="password != null">and password = '#{password}'</if> 
+  </select>
+  <insert id="insertUser" parameterType="User">insert into user (userId,username,password) values (#{userId},#{username},#{password})</insert>
+  <update id="updateUser" parameterType="User">update user set 
+    <if test="userId != null">userId = #{userId},</if>  
+    <if test="username != null">username = #{username},</if>  
+    <if test="password != null">password = #{password},</if>userId = #{userId} where userId = #{userId}
+  </update>
+  <delete id="deleteByIdsUser" parameterType="User">delete from user where userId in (#{ids})</delete>
+  <delete id="deleteUser" parameterType="User">delete from user where userId #{ids}</delete>
+  <select id="maxIdUser" resultType="java.lang.Integer">select max(userId) from user</select>
+  <select id="returnUserEntityByUserName" resultType="java.util.Map" resultMap="user">select * from user where username = #{username} and password = #{password}</select>
+</mapper>

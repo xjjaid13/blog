@@ -1,0 +1,7 @@
+body{background:#fff;color:#363636;line-height:1.2;}
+a,a:link{color:grey;text-decoration: none; }
+a:hover{color:black}
+a:visited {  }
+.navbar .nav li.dropdown .dropdown-toggle .caret, .navbar .nav li.dropdown.open .caret {border-top-color: #999;border-bottom-color: #999;}
+.main{background-color : #BEBEBE;}
+.btn{font-size:12px;color:grey;}
