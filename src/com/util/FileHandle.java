@@ -3,25 +3,35 @@ package com.util;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-/**
- * @author Cloud
- * */
+import org.apache.log4j.Logger;
+
+import com.exception.FunctionException;
+
+/**  
+ * 文件处理类
+ * <p>2014年7月23日下午3:37:36 xijiajia</p>
+ */
 public class FileHandle {
 
-	/** 创建文件 */
-	public static boolean createPath(String strPath){
-		File file = new File(strPath);
+	//log
+	private static Logger log = Logger.getLogger(FileHandle.class);
+	
+	/**
+	 * 创建文件夹，如果文件夹存在，则创建失败
+	 * @param filePath 创建的文件夹路径
+	 * @return
+	 */
+	public static boolean createPath(String filePath){
+		File file = new File(filePath);
 		boolean b = false;
 		if(!file.exists()){
 			b = file.mkdirs();
@@ -29,6 +39,11 @@ public class FileHandle {
 		return b;
 	}
 	
+	/**
+	 * 拷贝文件
+	 * @param sourceFile 源文件
+	 * @param desFile 目的文件
+	 */
 	public static void copyFile(File sourceFile,File desFile){
 		FileInputStream input = null;
 		BufferedInputStream inBuff = null;
@@ -46,7 +61,7 @@ public class FileHandle {
 	        }
 	        outBuff.flush();
 		}catch(Exception e){
-			Log.Error("FileHandle.copyFile exception:"+e.getMessage());
+			throw new FunctionException("拷贝文件发生异常",e);
 		}finally{
 			//关闭流 
 	        try {
@@ -63,11 +78,16 @@ public class FileHandle {
 		        	input.close();
 		        }
 			} catch (IOException e) {
-				Log.Error("FileHandle.copyFile IOException:"+e.getMessage());
+				throw new FunctionException("拷贝文件关闭流发生异常",e);
 			}
 		}
 	}
 	
+	/**
+	 * 拷贝文件夹
+	 * @param sourceDir 源文件夹
+	 * @param targetDir 目标文件夹
+	 */
 	public static void copyDirectiory(String sourceDir, String targetDir){
 		try{
 			File target = new File(targetDir);
@@ -88,11 +108,14 @@ public class FileHandle {
 			    }
 			}
 		}catch(Exception e){
-			Log.Error("FileHandle.copyDirectiory Exception:"+e.getMessage());
+			throw new FunctionException("拷贝文件夹异常",e);
 		}
 }
 	
-	/** 删除文件 */
+	/**
+	 * 删除文件
+	 * @param file 文件名
+	 */
 	public static void delPath(File file){
 		if(file.exists()){
 		    if(file.isFile()){
@@ -105,63 +128,92 @@ public class FileHandle {
 		    }
 		    file.delete();
 		}else{
-		    Log.Debug("删除文件不存在");
+		    log.debug("删除文件不存在");
 		} 
 	}
 	
-	public static void write(String path, String content) {
+	/**
+	 * 写内容到文件
+	 * @param path 写入路径
+	 * @param content 文件内容
+	 * @return
+	 */
+	public static boolean write(String path, String content) {
+		FileOutputStream fos = null;
+		OutputStreamWriter osw = null;
+		boolean result = false;
 		try {
 			File f = new File(path);
-			if (f.exists()) {
-				System.out.println("文件存在");
-				 
-			} else {
-				System.out.println("文件不存在，正在创建...");
-				if (f.createNewFile()) {
-					System.out.println("文件创建成功！");
-				} else {
-					System.out.println("文件创建失败！");
-				}
+			if (!f.exists() && f.createNewFile()) {
+				result = true;
 			}
-			FileOutputStream fos  =   new  FileOutputStream(path);
-            OutputStreamWriter osw  =   new  OutputStreamWriter(fos, "UTF-8");
+			fos = new FileOutputStream(path);
+            osw = new OutputStreamWriter(fos,"UTF-8");
             osw.write(content);
             osw.flush();
+            return result;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new FunctionException("写入文件异常",e);
+		} finally{
+			try{
+				if(fos != null){
+					fos.close();
+				}
+				if(osw != null){
+					osw.close();
+				}
+			}catch(Exception e){
+				throw new FunctionException("写入文件关闭连接异常",e);
+			}
 		}
 	}
 	
-	public static void write(String path, String content , boolean isCover) {
+	/**
+	 * 写内容到文件，是否覆盖
+	 * @param path 路径
+	 * @param content 内容
+	 * @param isCover 是否覆盖 true覆盖 false不覆盖
+	 * @return
+	 */
+	public static boolean write(String path,String content,boolean isCover) {
+		boolean result = false;
+		FileOutputStream fos = null;
+		OutputStreamWriter osw = null;
 		try {
 			File f = new File(path);
-			if (f.exists()) {
-				System.out.println(path+":文件存在");
+			if(f.exists()){
 				if(!isCover){
-					return;
+					return true;
 				}
-			} else {
-				System.out.println(path+"文件不存在，正在创建...");
-				if (f.createNewFile()) {
-					System.out.println("文件创建成功！");
-				} else {
-					System.out.println("文件创建失败！");
-				}
+			}else{
+				f.createNewFile();
 			}
-			FileOutputStream fos  =   new  FileOutputStream(path);
-            OutputStreamWriter osw  =   new  OutputStreamWriter(fos, "UTF-8");
+			fos = new FileOutputStream(path);
+            osw = new OutputStreamWriter(fos, "UTF-8");
             osw.write(content);
             osw.flush();
+            return result;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new FunctionException("写入文件异常",e);
+		} finally{
+			try{
+				if(fos != null){
+					fos.close();
+				}
+				if(osw != null){
+					osw.close();
+				}
+			}catch(Exception e){
+				throw new FunctionException("写入文件关闭连接异常",e);
+			}
 		}
 	}
+	
 	/**
-	 * file read with encode
-	 * @param filePath String
-	 * @param encode String
+	 * 读取文件
+	 * @param filePath 文件路径
+	 * @param encode 编码
 	 * @return String
-	 * @throws IOException 
 	 * */
 	public static String readFile(String filePath,String encode){
 		File file = null;
@@ -179,9 +231,9 @@ public class FileHandle {
 			while((tempbyte = rb.read()) != -1){
 				strBuf.append((char)tempbyte);
 			}
-		}catch(IOException e){
-			Log.Error("读取路径异常:" + e.getMessage());
-			return null;
+			return strBuf.toString();
+		}catch(Exception e){
+			throw new FunctionException("读取文件异常",e);
 		}finally{
 			try{
 				if(in != null){
@@ -194,16 +246,14 @@ public class FileHandle {
 					rb.close();
 				}
 			}catch(Exception e){
-				Log.Error("FileHandle.readFile exception : " + e.getMessage());
+				throw new FunctionException("读取文件释放连接异常",e);
 			}
 		}
-		return strBuf.toString();
 	}
 	
 	/**
-	 * the over-loading of readFile()with encoding utf-8
-	 * @param filePath String
-	 * @return String
+	 * 读取文件，默认utf-8
+	 * @param filePath 文件路径
 	 * */
 	public static String readFile(String filePath){
 		File file = null;
@@ -221,9 +271,9 @@ public class FileHandle {
 			while((tempbyte = rb.read()) != -1){
 				strBuf.append((char)tempbyte);
 			}
+			return strBuf.toString();
 		}catch(IOException e){
-			Log.Error("FileHandle.readFile IOException :" + e.getMessage());
-			return null;
+			throw new FunctionException("读取文件异常",e);
 		}finally{
 			try{
 				if(in != null){
@@ -236,10 +286,9 @@ public class FileHandle {
 					rb.close();
 				}
 			}catch(Exception e){
-				Log.Error("FileHandle.readFile exception:" + e.getMessage());
+				throw new FunctionException("读取文件释放连接异常",e);
 			}
 		}
-		return strBuf.toString();
 	}
 	
 	/**
@@ -261,13 +310,10 @@ public class FileHandle {
 			fw.write(content,0,content.length());  
 			fw.flush();
 			b = true;
-		} catch (IOException e) {
-			Log.Error(e.getMessage());
+		} catch (Exception e) {
+			throw new FunctionException("写入文件异常",e);
 		}  
 		return b;
 	}
 	
-	public static void main(String[] args) throws IOException{
-		FileHandle.write("D:/test.txt", "颠三倒四");
-	}
 }

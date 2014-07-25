@@ -7,10 +7,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class Init {
+	
+	//log
+	private static Logger log = Logger.getLogger(Init.class);
 	
 	/** 项目路径 */
 	public static String realPath = "";
@@ -32,9 +36,9 @@ public final class Init {
 				hm.put(key, pp.getProperty(key));
 			}
 		} catch (FileNotFoundException e) {
-			Log.Error("Init.init FileNotFoundException : " + e.getMessage());
+			log.error("Init.init FileNotFoundException : " + e.getMessage());
 		} catch (IOException e) {
-			Log.Error("Init.init IOException : " + e.getMessage());
+			log.error("Init.init IOException : " + e.getMessage());
 		}
 	}
 	

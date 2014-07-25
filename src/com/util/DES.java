@@ -14,7 +14,8 @@ public class DES {
     /*
      * encrypt the string to string made up of hex return the encrypted string
      */
-    public static String strEnc(String data, String firstKey, String secondKey,
+    @SuppressWarnings("rawtypes")
+	public static String strEnc(String data, String firstKey, String secondKey,
             String thirdKey) {
 
         int leng = data.length();
@@ -190,7 +191,8 @@ public class DES {
      * decrypt the encrypted string to the original string
      * return the original string
      */
-    public static String strDec(String data, String firstKey, String secondKey,
+    @SuppressWarnings({ "unused", "rawtypes" })
+	public static String strDec(String data, String firstKey, String secondKey,
             String thirdKey) {
         int leng = data.length();
         String decStr = "";
@@ -268,7 +270,8 @@ public class DES {
     /*
      * return bit array(it's length % 64 = 0)
      */
-    public static List getKeyBytes(String key) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public static List getKeyBytes(String key) {
         List keyBytes = new ArrayList();
         int leng = key.length();
         int iterator = (leng / 4);
@@ -566,7 +569,8 @@ public class DES {
         return ipByte;
     }
 
-    public static int[] expandPermute(int[] rightData) {
+    @SuppressWarnings("unused")
+	public static int[] expandPermute(int[] rightData) {
         int[] epByte = new int[48];
         int i, j;
         for (i = 0; i < 8; i++) {

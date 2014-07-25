@@ -16,8 +16,4 @@ public class CommonHandle {
 		}
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(CommonHandle.returnPageCount(101, 10));
-	}
-	
 }

@@ -1,8 +1,0 @@
-body{background:#fff;color:#363636;line-height:1.2;}
-a,a:link{color:#222;text-decoration: none; }
-a:visited {  }
-.navbar-inner{background-color:papayawhip;}
-.navbar .nav > li > a{color:#8dd1ff}
-.navbar .nav > li > a:hover{color:#08C;}
-.navbar .nav li.dropdown .dropdown-toggle .caret, .navbar .nav li.dropdown.open .caret {border-top-color: #999;border-bottom-color: #999;}
-.main{background-color : wheat;}

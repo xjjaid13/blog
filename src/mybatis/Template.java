@@ -28,7 +28,7 @@ public class Template {
 		String projectPath = System.getProperty("user.dir");
 		
 		/** 模版文件 */
-		String templateFile = "C:/Users/OF-PC/git/datac/WebContent/mybatis-template";
+		String templateFile = "C:/Users/OF-PC/git/datac2/WebContent/static/mybatis-template";
 		
 		/** 保存文件 */
 		String saveFile = projectPath + "/";
@@ -162,18 +162,20 @@ public class Template {
 			String resultMapString = "{for}<result property=\"{columnName}\" column=\"{columnName}\" />{endfor}";
 			String resultMapResult = returnContent(resultMapString,result,field,tableName,type);
 			result.delete(0, result.length());
-			String selectString = "select * from {tablename} where {tableName}Id = #{{tableName}Id}";
+			String selectString = "select * from {tablename} where 1 = 1 "+
+					"{for}<if test=\"{columnname} != null\"> and {columnname} = {#columnname}</if> {endfor}"
+					+"<if test=\"condition != null\"> ${condition}</if>";
 			String selectResult = returnContent(selectString,result,field,tableName,type);
 			result.delete(0, result.length());
 			String selectListString = "select * from {tablename} where 1 = 1 "+
-				"<if test=\"condition != null\"> and ${condition}</if> "+
 				"{for}<if test=\"{columnname} != null\"> and {columnname} = {#columnname}</if> {endfor}"+
-		        " <if test=\"startPage != -1\">  <if test=\"startPage != -1\"> limit #{startPage},#{page}</if> ";
+				"<if test=\"condition != null\"> ${condition}</if> "+
+		        " <if test=\"startPage != -1\"> limit #{startPage},#{page}</if> ";
 			String selectListResult = returnContent(selectListString,result,field,tableName,type);
 			result.delete(0, result.length());
 			String selectCountString = "select count({tableName}Id) from {tablename} where 1 = 1 "+
-					"<if test=\"condition != null\"> and ${condition}</if> "+
-					"{for}<if test=\"{columnname} != null\"> and {columnname} = {#columnname}</if> {endfor} ";
+					"{for}<if test=\"{columnname} != null\"> and {columnname} = {#columnname}</if> {endfor} "+
+					"<if test=\"condition != null\"> ${condition}</if> ";
 			String selectCountResult = returnContent(selectCountString,result,field,tableName,type);
 			result.delete(0, result.length());
 			String insertString = "insert into {tablename} ("+
@@ -183,12 +185,16 @@ public class Template {
 					")";
 			String insertResult = returnContent(insertString,result,field,tableName,type);
 			result.delete(0, result.length());
-			String updateString = "update {tablename} set "+
-				"{for}<if test=\"{columnname} != null\">{columnname} = #{{columnName}},</if>{endfor}"+
-				"{tableName}Id = #{{tableName}Id} where {tableName}Id = #{{tableName}Id}";
+			String deleteString = "delete from {tablename} where 1 = 1 {for}<if test=\"{columnname} != null\"> and {columnname} = {#columnname} </if> {endfor} <if test=\"condition != null\"> ${condition}</if>";
+			String deleteResult = returnContent(deleteString,result,field,tableName,type);
+			   
+			result.delete(0, result.length());
+			String updateString = "update {tablename} <set> "+
+				"{for}<if test=\"{columnname} != null\">{columnname} = #{{columnName}},</if>{endfor} </set>  "+
+				"where 1 = 1 <if test=\"{tableName}Id != null\"> and {tableName}Id = #{{tableName}Id}</if><if test=\"condition != null\"> ${condition}</if>";
 			String updateResult = returnContent(updateString,result,field,tableName,type);
 			result.delete(0, result.length());
-			String deleteByIdsString = "delete from {tablename} where {tableName}Id in (#{ids})";
+			String deleteByIdsString = "delete from {tablename} where {tableName}Id in (${ids})";
 			String deleteByIdsResult = returnContent(deleteByIdsString,result,field,tableName,type);
 			result.delete(0, result.length());
 			String maxIdString = "select max({tableName}Id) from {tablename}";
@@ -248,6 +254,16 @@ public class Template {
 			List<Element> deleteEles = rootEle.elements("delete");
 			for(Element e : deleteEles){
 				String id = e.attributeValue("id");
+				if("delete".equals(id)){
+					e.clearContent();
+					e.setText("#deleteResult#");
+				}else{
+					continue;
+				}
+			}
+			List<Element> deleteByIdsEles = rootEle.elements("deleteByIds");
+			for(Element e : deleteByIdsEles){
+				String id = e.attributeValue("id");
 				if("deleteByIds".equals(id)){
 					e.clearContent();
 					e.setText("#deleteByIdsResult#");
@@ -266,6 +282,7 @@ public class Template {
 	        templateContent = templateContent.replace("#maxIdResult#", maxIdResult);
 	        templateContent = templateContent.replace("#insertResult#", insertResult);
 	        templateContent = templateContent.replace("#updateResult#", updateResult);
+	        templateContent = templateContent.replace("#deleteResult#", deleteResult);
 	        templateContent = templateContent.replace("#deleteByIdsResult#", deleteByIdsResult);
 	        FileHandle.write(path, templateContent);
 	        formatXMLFile(path);

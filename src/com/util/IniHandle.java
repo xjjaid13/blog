@@ -5,14 +5,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 /**
  * 读取配置文件
  * */
 public class IniHandle {
+	
+	//log
+	private static Logger log = Logger.getLogger(FileHandle.class);
 	
 	private Properties ini = null;
 	
@@ -29,16 +32,16 @@ public class IniHandle {
 			fin = new FileInputStream (iniPath);
 			ini.load (fin);
 		} catch (FileNotFoundException e) {
-			Log.Error(getIniPath() + ": 路径未找到.");
+			log.error(getIniPath() + ": 路径未找到.");
 		} catch (IOException e) {
-			Log.Error("IniHandle 构造函数异常:" + e.getMessage());
+			log.error("IniHandle 构造函数异常:" + e.getMessage());
 		}finally{
 			try {
 				if(fin != null ){
 					fin.close();
 				}
 			} catch (IOException e) {
-				Log.Error("IniHandle.setIniPath throws a exception : " + e.getMessage());
+				log.error("IniHandle.setIniPath throws a exception : " + e.getMessage());
 			}
 		}
 	}
@@ -81,17 +84,7 @@ public class IniHandle {
 			bw.close ();
 			fw.close ();
 		}catch (Exception ex) {
-			Log.Error("IniHandle.saveIni() throw a exception:" + ex.getMessage());
-		}
-	}
-	
-	public static void main(String[] args) throws FileNotFoundException, IOException{
-		Properties p = new Properties();
-		p.load(new FileInputStream("D:/test.ini"));
-		Set s = p.keySet();
-		Iterator<String> it = s.iterator();
-		while(it.hasNext()){
-			System.out.println(it.next());
+			log.error("IniHandle.saveIni() throw a exception:" + ex.getMessage());
 		}
 	}
 

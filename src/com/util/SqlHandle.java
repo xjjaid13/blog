@@ -155,10 +155,12 @@ public class SqlHandle {
 		return sql + " LIMIT " + start + "," + (end - start );
 	}
 
+	@SuppressWarnings("unused")
 	private static boolean hasDistinct(String sql) {
 		return sql.toLowerCase().indexOf("select distinct") >= 0;
 	}
 
+	@SuppressWarnings("unused")
 	private static String getRowNumber(String sql) {
 		StringBuffer rownumber = new StringBuffer(50)
 				.append("ROWNUMBER() OVER(");

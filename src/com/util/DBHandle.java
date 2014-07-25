@@ -14,11 +14,16 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author cloud
  * 数据库操作类
  */
 public class DBHandle {
+	
+	//log
+	private static Logger log = Logger.getLogger(DBHandle.class);
 	
 	private Connection conn = null;
 	
@@ -44,7 +49,7 @@ public class DBHandle {
 			conn = DriverManager.getConnection("proxool." + align);
 			st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 		}catch(Exception e){
-			Log.Error("数据库连接池获得失败:" + e.getMessage());
+			log.error("数据库连接池获得失败:" + e.getMessage());
 		}
 	}
 	
@@ -84,7 +89,7 @@ public class DBHandle {
 			}
 			return strData;
 		} catch (SQLException e) {
-			Log.Error("DBHandle.getColumns 执行异常,参数 " + sql + " :" + e.getMessage());
+			log.error("DBHandle.getColumns 执行异常,参数 " + sql + " :" + e.getMessage());
 		}
 		return strData;
 	}
@@ -106,7 +111,7 @@ public class DBHandle {
 				}
 			}
 		}catch(Exception e){
-			Log.Error("DBHandle.callOption throws a exception : " + e.getMessage());
+			log.error("DBHandle.callOption throws a exception : " + e.getMessage());
 		}
 		return call;
 	}
@@ -134,9 +139,9 @@ public class DBHandle {
 				return strData;
 			}
 		} catch (SQLException e) {
-			Log.Error("sql语句 "+sql+" 查询异常 :" + e.getMessage());
+			log.error("sql语句 "+sql+" 查询异常 :" + e.getMessage());
 		} catch (OutOfMemoryError e){
-			Log.Error("sql语句 "+sql+" 内存溢出 :" + e.getMessage());
+			log.error("sql语句 "+sql+" 内存溢出 :" + e.getMessage());
 		}
 		return null;
 	}
@@ -158,9 +163,9 @@ public class DBHandle {
 				return strData;
 			}
 		} catch (SQLException e) {
-			Log.Error("sql语句 "+sql+" 查询异常 :" + e.getMessage());
+			log.error("sql语句 "+sql+" 查询异常 :" + e.getMessage());
 		} catch (OutOfMemoryError e){
-			Log.Error("sql语句 "+sql+" 内存溢出 :" + e.getMessage());
+			log.error("sql语句 "+sql+" 内存溢出 :" + e.getMessage());
 		}
 		return null;
 	}
@@ -184,9 +189,9 @@ public class DBHandle {
 				return DataHandle.handleValue(strData[0][0]);
 			}
 		} catch (SQLException e) {
-			Log.Error("sql语句 "+sql+" 查询异常 :" + e.getMessage());
+			log.error("sql语句 "+sql+" 查询异常 :" + e.getMessage());
 		} catch (OutOfMemoryError e){
-			Log.Error("sql语句 "+sql+" 内存溢出 :" + e.getMessage());
+			log.error("sql语句 "+sql+" 内存溢出 :" + e.getMessage());
 		}
 		return "";
 	}
@@ -237,7 +242,7 @@ public class DBHandle {
 				return null;
 			}
 		} catch (SQLException e) {
-			Log.Error("分页查询sql语句异常 :" + sql + ", " + start + "," + end);
+			log.error("分页查询sql语句异常 :" + sql + ", " + start + "," + end);
 			return null;
 		}
 	}
@@ -248,7 +253,7 @@ public class DBHandle {
 			conn.setAutoCommit(false);
 			st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 		}catch(Exception e){
-			Log.Error("数据库连接池获得失败:" + e.getMessage());
+			log.error("数据库连接池获得失败:" + e.getMessage());
 		}
 	}
 	
@@ -275,7 +280,7 @@ public class DBHandle {
 			conn.rollback();
 			conn.setAutoCommit(true);
 		} catch (SQLException e) {
-			Log.Error("事务回滚失败!:"+message);
+			log.error("事务回滚失败!:"+message);
 			e.printStackTrace();
 		}
 	}
@@ -295,7 +300,7 @@ public class DBHandle {
 				}
 			}
 		}catch(SQLException e){
-			Log.Error("返回表中字段类型异常.参数 " + tablename + "," + columnname + ". :" + e.getMessage());
+			log.error("返回表中字段类型异常.参数 " + tablename + "," + columnname + ". :" + e.getMessage());
 		}
 		return 0;
 	}
@@ -350,7 +355,7 @@ public class DBHandle {
 		try {
 			i_id = st.executeUpdate(sql);
 		} catch (SQLException e) {
-			Log.Error("执行sql语句 "+sql+" 异常:" + e.getMessage());
+			log.error("执行sql语句 "+sql+" 异常:" + e.getMessage());
 		}
 		if(i_id != 1){
 			return false;
@@ -381,7 +386,7 @@ public class DBHandle {
 				conn.close();
 			}
 		} catch (SQLException e) {
-			Log.Error("关闭数据库连接异常:" + e.getMessage());
+			log.error("关闭数据库连接异常:" + e.getMessage());
 		}
 	}
 	
@@ -395,7 +400,7 @@ public class DBHandle {
 				con.close();
 			}
 		} catch (SQLException e) {
-			Log.Error("关闭数据库连接异常:" + e.getMessage());
+			log.error("关闭数据库连接异常:" + e.getMessage());
 		}
 	}
 	
@@ -409,7 +414,7 @@ public class DBHandle {
 				list.add(pkName);
 			}
 		} catch (SQLException e) {
-			Log.Error("查询主键异常:" + e.getMessage());
+			log.error("查询主键异常:" + e.getMessage());
 		}
 		return list;
 	}
@@ -445,15 +450,9 @@ public class DBHandle {
 				rs.beforeFirst();
 			}
 		} catch (SQLException e) {
-			Log.Error("DBHandle.getNumRow throws a exception : " + e.getMessage());
+			log.error("DBHandle.getNumRow throws a exception : " + e.getMessage());
 		}
 		return count;
 	}
 	
-	public static void main(String[] args){
-		DBHandle dbHandle = new DBHandle();
-		dbHandle.openConnMysql();
-		System.out.println(dbHandle.getColumnType("blog-type", "blogTypeId"));
-		dbHandle.closeConn();
-	}
 }

@@ -347,12 +347,5 @@ public class MailHandle {
 	public void setSaveAttchPath(String saveAttchPath) {
 		this.saveAttchPath = saveAttchPath;
 	}
-
-	public static void main(String[] args) throws Exception{
-		MailHandle m = new MailHandle();
-		m.setSendaddress("252042150@qq.com");
-		m.setSendtitle("aa");
-		m.sendMail();
-	}
 	
 }

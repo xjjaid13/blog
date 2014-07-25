@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.util.Log;
+import org.apache.log4j.Logger;
 
 /**
  * 存储过程
@@ -13,6 +13,9 @@ import com.util.Log;
  * */
 public class DBProcedure {
 
+	//log
+	private static Logger log = Logger.getLogger(DBHandle.class);
+	
 	Connection conn = null;
 	
 	public DBProcedure(DBHandle db){
@@ -31,7 +34,7 @@ public class DBProcedure {
 				}
 			}
 		}catch(Exception e){
-			Log.Error("DBProcedure.returnOption 发生异常:"+e.getMessage());
+			log.error("DBProcedure.returnOption 发生异常:"+e.getMessage());
 		}
 		return call;
 	}

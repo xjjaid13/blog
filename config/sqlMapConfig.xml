@@ -6,31 +6,35 @@
 
     <typeAliases>
 		
-        <typeAlias alias="Blog" type="com.spring.entity.Blog" /> 
+        <typeAlias alias="Blog" type="com.po.Blog" /> 
 		
-        <typeAlias alias="BlogType" type="com.spring.entity.BlogType" /> 
+        <typeAlias alias="BlogSubject" type="com.po.BlogSubject" /> 
 		
-        <typeAlias alias="Note" type="com.spring.entity.Note" /> 
+        <typeAlias alias="BlogType" type="com.po.BlogType" /> 
 		
-        <typeAlias alias="NoteTime" type="com.spring.entity.NoteTime" /> 
+        <typeAlias alias="Note" type="com.po.Note" /> 
 		
-        <typeAlias alias="NoteType" type="com.spring.entity.NoteType" /> 
+        <typeAlias alias="NoteTime" type="com.po.NoteTime" /> 
 		
-        <typeAlias alias="Rss" type="com.spring.entity.Rss" /> 
+        <typeAlias alias="NoteType" type="com.po.NoteType" /> 
 		
-        <typeAlias alias="RssSubscribe" type="com.spring.entity.RssSubscribe" /> 
+        <typeAlias alias="Rss" type="com.po.Rss" /> 
 		
-        <typeAlias alias="RssType" type="com.spring.entity.RssType" /> 
+        <typeAlias alias="RssCrawl" type="com.po.RssCrawl" /> 
 		
-        <typeAlias alias="Tag" type="com.spring.entity.Tag" /> 
+        <typeAlias alias="RssSubscribe" type="com.po.RssSubscribe" /> 
 		
-        <typeAlias alias="Type" type="com.spring.entity.Type" /> 
+        <typeAlias alias="RssType" type="com.po.RssType" /> 
 		
-        <typeAlias alias="User" type="com.spring.entity.User" /> 
+        <typeAlias alias="Tag" type="com.po.Tag" /> 
 		
-        <typeAlias alias="WebLink" type="com.spring.entity.WebLink" /> 
+        <typeAlias alias="Type" type="com.po.Type" /> 
 		
-        <typeAlias alias="WebLinktype" type="com.spring.entity.WebLinktype" /> 
+        <typeAlias alias="User" type="com.po.User" /> 
+		
+        <typeAlias alias="WebLink" type="com.po.WebLink" /> 
+		
+        <typeAlias alias="WebLinktype" type="com.po.WebLinktype" /> 
 		
     </typeAliases>    
     

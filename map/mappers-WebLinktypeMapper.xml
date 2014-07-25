@@ -1,44 +1,47 @@
 <?xml version="1.0" encoding="GBK"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.spring.dao.WebLinktypeMapperDao">
+<mapper namespace="com.dao.WebLinktypeMapperDao">
   <resultMap id="webLinktype" type="WebLinktype">
-    <id property="webLinktypeId" column="webLinktypeId"/>
+    <result property="webLinktypeId" column="webLinktypeId"/>
     <result property="name" column="name"/>
     <result property="userId" column="userId"/>
-    <collection property="webLinkList" ofType="WebLink">
-      <id property="webLinkId" column="webLinkId"/>
-      <result property="name" column="name1"/>
-      <result property="link" column="link"/>
-      <result property="userId" column="userId"/>
-      <result property="hit" column="hit"/>
-      <result property="host" column="host"/>
-      <result property="description" column="description"/>
-      <result property="icon" column="icon"/>
-    </collection>
   </resultMap>
-  <select id="selectWebLinktype" resultType="java.util.Map" resultMap="webLinktype">select * from web_linktype where webLinktypeId = #{webLinktypeId}</select>
-  <select id="returnEntityList" resultType="java.util.Map" resultMap="webLinktype">select *,b.name as name1 from web_linktype a LEFT JOIN web_link b ON a.webLinktypeId = b.webLinktypeId WHERE 1 = 1 
-    <if test="userId != null">and a.userId = #{userId}</if> 
-  </select>
-  <select id="selectListWebLinktype" resultType="java.util.List" resultMap="webLinktype">select * from web_linktype where 1 = 1 
+  <select id="select" resultType="java.util.Map" resultMap="webLinktype">select * from web_linktype where 1 = 1 
     <if test="webLinktypeId != null">and webLinktypeId = #{webLinktypeId}</if>  
+    <if test="name != null">and name = #{name}</if>  
     <if test="userId != null">and userId = #{userId}</if>  
-    <if test="name != null">and name = '#{name}'</if> 
-    <if test="startPage != -1"> limit #{startPage},#{page}</if> 
+    <if test="condition != null">${condition}</if>
   </select>
-  <select id="selectCountWebLinktype" resultType="java.lang.Integer">select count(webLinktypeId) from web_linktype where 1 = 1 
+  <select id="selectList" resultType="java.util.List" resultMap="webLinktype">select * from web_linktype where 1 = 1 
     <if test="webLinktypeId != null">and webLinktypeId = #{webLinktypeId}</if>  
+    <if test="name != null">and name = #{name}</if>  
     <if test="userId != null">and userId = #{userId}</if>  
-    <if test="name != null">and name = '#{name}'</if> 
+    <if test="condition != null">${condition}</if>  
+    <if test="startPage != -1">limit #{startPage},#{page}</if> 
   </select>
-  <insert id="insertWebLinktype" parameterType="WebLinktype">insert into web_linktype (webLinktypeId,name,userId) values (#{webLinktypeId},#{name},#{userId})</insert>
-  <update id="updateWebLinktype" parameterType="WebLinktype">update web_linktype set 
-    <if test="webLinktypeId != null">webLinktypeId = #{webLinktypeId},</if>  
-    <if test="userId != null">userId = #{userId},</if>  
-    <if test="name != null">name = #{name},</if>webLinktypeId = #{webLinktypeId} where webLinktypeId = #{webLinktypeId}
+  <select id="selectCount" resultType="java.lang.Integer">select count(webLinktypeId) from web_linktype where 1 = 1 
+    <if test="webLinktypeId != null">and webLinktypeId = #{webLinktypeId}</if>  
+    <if test="name != null">and name = #{name}</if>  
+    <if test="userId != null">and userId = #{userId}</if>  
+    <if test="condition != null">${condition}</if> 
+  </select>
+  <insert id="insert" parameterType="WebLinktype">insert into web_linktype (webLinktypeId,name,userId) values (#{webLinktypeId},#{name},#{userId})</insert>
+  <update id="update" parameterType="WebLinktype">update web_linktype 
+    <set> 
+      <if test="webLinktypeId != null">webLinktypeId = #{webLinktypeId},</if>
+      <if test="name != null">name = #{name},</if>
+      <if test="userId != null">userId = #{userId},</if> 
+    </set> where 1 = 1 
+    <if test="webLinktypeId != null">and webLinktypeId = #{webLinktypeId}</if>
+    <if test="condition != null">${condition}</if>
   </update>
-  <delete id="deleteByIdsWebLinktype" parameterType="WebLinktype">delete from web_linktype where webLinktypeId in (#{ids})</delete>
-  <delete id="deleteWebLinktype" parameterType="WebLinktype">delete from web_linktype where webLinktypeId = #{webLinktypeId}</delete>
-  <select id="maxIdWebLinktype" resultType="java.lang.Integer">select max(webLinktypeId) from web_linktype</select>
+  <delete id="delete" parameterType="WebLinktype">delete from web_linktype where 1 = 1 
+    <if test="webLinktypeId != null">and webLinktypeId = #{webLinktypeId}</if>  
+    <if test="name != null">and name = #{name}</if>  
+    <if test="userId != null">and userId = #{userId}</if>  
+    <if test="condition != null">${condition}</if>
+  </delete>
+  <delete id="deleteByIds" parameterType="WebLinktype">delete from web_linktype where webLinktypeId in (${ids})</delete>
+  <select id="maxId" resultType="java.lang.Integer">select max(webLinktypeId) from web_linktype</select>
 </mapper>

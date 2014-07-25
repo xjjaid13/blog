@@ -1,18 +1,7 @@
 package com.util;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import com.spring.entity.WebLink;
 
 /**
  * html字符串处理类
@@ -144,61 +133,4 @@ public final class HtmlHandle {
 		return textStr;// 返回文本字符串
 	}
 	
-	/**
-	 * 从远程网页获得需要的信息
-	 * @param webLinkContent
-	 * @return
-	 * @throws IOException
-	 */
-	public static WebLink fetchFromRemote(String webLinkContent){
-		try{
-			WebLink webLink = new WebLink();
-			if(webLinkContent.indexOf("http:") == -1){
-				webLinkContent = "http://" + webLinkContent; 
-			}
-			Document doc = Jsoup.connect(webLinkContent).get();
-			//网页标题
-			Elements titleElements = doc.select("title");
-			String title = titleElements.html();
-			webLink.setName(title);
-			//网页描述
-			Elements descriptionElements = doc.select("meta[name=description]");
-			String description = descriptionElements.attr("content");
-			if("".equals(DataHandle.handleValue(description))){
-				description = title;
-			}
-			webLink.setDescription(description);
-			Pattern pattern = Pattern.compile("^(.*?)\\.(.*?)\\.");
-			Matcher matcher = pattern.matcher(webLinkContent);
-			if(matcher.find()){
-				String host = "http://www." + matcher.group(2) + ".com";
-				webLink.setHost(host);
-				//一般网页默认icon
-				String defaultIcon = host + "/favicon.ico";
-				try{
-				    GetMethod method = new GetMethod(defaultIcon);
-				    method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, 
-				    		new DefaultHttpMethodRetryHandler(3, false));
-				    //是否是icon,如果不是icon,去页面内容中查找
-				    Header[] HeaderArray = method.getResponseHeaders("Content-Type");
-				    if(HeaderArray.length > 0 && HeaderArray[0].toString().indexOf("image/x-icon") == -1){
-			    		Elements iconElements = doc.select("link[rel=shortcut icon]");
-						webLink.setIcon(iconElements.attr("href"));
-			    	}else{
-						webLink.setIcon(defaultIcon);
-			    	}
-				}catch(Exception e){
-					webLink.setIcon("http://115.29.149.76/datac/image/littleCat.ico");
-				}
-				
-			}
-			webLink.setLink(webLinkContent);
-			return webLink;
-		}catch(Exception e){
-			Log.Error(e);
-		}
-		return null;
-		
-	}
-
 }

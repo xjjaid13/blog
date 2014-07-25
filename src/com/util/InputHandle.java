@@ -72,12 +72,4 @@ public class InputHandle {
 		return str;
 	}
 	
-	public static void main(String[] args){
-		String content = FileHandle.readFile("D:/aa.txt");
-		Pattern pattern = Pattern.compile("<p>([\\s\\S]*?)</p>");
-		Matcher matcher = pattern.matcher(content);
-		System.out.println(matcher.find());
-		
-	}
-	
 }
